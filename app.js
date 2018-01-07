@@ -1,16 +1,24 @@
+require('dotenv').config();
+
 /**
  * Express application
  */
 
-export function app() {
-    const express = require('express');
-    const app = express();
+const express       = require('express');
+const bodyParser    = require('body-parser');
 
-    app.get('/', (req, res) => {
-        res.send('API Running');
-    });
+const app           = express();
 
-    app.listen(process.env.PORT, () => {
-        console.log('App listening on port ' + process.env.PORT);
-    });
-}
+const PORT          = process.env.PORT || 8080;
+
+app.use(bodyParser.json());
+
+app.get('/', (req, res) => {
+    res.send('API running');
+});
+
+app.listen(PORT, () => {
+    console.log('App listening on port ' + PORT);
+});
+
+export default app;
