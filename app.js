@@ -5,6 +5,7 @@ require('dotenv').config();
  */
 
 const express       = require('express');
+const logger        = require('morgan');
 const bodyParser    = require('body-parser');
 
 const app           = express();
@@ -12,6 +13,7 @@ const app           = express();
 const PORT          = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
+app.use(logger('dev'));
 
 app.get('/', (req, res) => {
     res.send('API running');

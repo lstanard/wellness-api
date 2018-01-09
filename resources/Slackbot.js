@@ -1,7 +1,7 @@
 /**
  * Slack API
  */
-const Slack = require('slack');
+const Slackbots = require('slackbots');
 
 export class Slackbot {
 
@@ -9,7 +9,20 @@ export class Slackbot {
      * Initialize Slack bot
      */
     constructor() {
-        this.bot = new Slack(process.env.SLACK_BOT_TOKEN);
+        this.bot = new Slackbots({
+            token: process.env.SLACK_BOT_TOKEN,
+            name: process.env.SLACK_BOT_USER
+        });
+
+        this.listenForMessage();
+    }
+
+    listenForMessage() {
+        this.bot.on('message', (data) => {
+            if (data.type !== 'message') {
+                return;
+            }
+        });
     }
 
     /**
@@ -18,12 +31,12 @@ export class Slackbot {
      * @param  {string} message Message text
      */
     postMessage(channel, message) {
-        this.bot.chat.postMessage({
-            'token': process.env.SLACK_BOT_TOKEN,
-            'channel': '@' + channel,
-            'text': message,
-            'as_user': true,
-            'username': process.env.SLACK_BOT_USER
-        });
+        channel = '@' + channel;
+
+        //replacing with different package
+        this.bot.postMessageToUser(
+            channel,
+            message
+        );
     }
 }
