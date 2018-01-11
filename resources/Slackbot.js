@@ -14,7 +14,9 @@ export class Slackbot {
             name: process.env.SLACK_BOT_USER
         });
 
-        this.listenForMessage();
+        this.bot.on('start', () => {
+            this.listenForMessage();
+        });
     }
 
     listenForMessage() {
@@ -22,6 +24,8 @@ export class Slackbot {
             if (data.type !== 'message') {
                 return;
             }
+
+            this.postMessage(data.user, 'Message received');
         });
     }
 
@@ -31,12 +35,13 @@ export class Slackbot {
      * @param  {string} message Message text
      */
     postMessage(channel, message) {
-        channel = '@' + channel;
-
-        //replacing with different package
-        this.bot.postMessageToUser(
+        this.bot.postMessage(
             channel,
-            message
+            message,
+            {
+                "as_user": true,
+                "username": process.env.SLACK_BOT_USER
+            }
         );
     }
 }
